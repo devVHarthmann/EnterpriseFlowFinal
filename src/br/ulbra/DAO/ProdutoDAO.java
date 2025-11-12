@@ -114,7 +114,18 @@ public class ProdutoDAO extends AbstractDAO implements CrudRepository<Produto> {
             ps.executeUpdate();
         }
     }
+    
+    public void atualizarQuantidade(Produto p) throws SQLException {
+        String sql = "UPDATE produto SET quantEstoque = ? WHERE idProduto = ?";
+        try (Connection con = getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
 
+            ps.setInt(1, p.getQuantEstoque());
+            ps.setInt(2, p.getIdProduto());
+            ps.executeUpdate();
+        }
+    }
+    
     @Override
     public void remover(int id) throws SQLException {
         String sql = "DELETE FROM produto WHERE idProduto = ?";

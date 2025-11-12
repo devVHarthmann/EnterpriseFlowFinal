@@ -45,6 +45,7 @@ public class VendaView extends javax.swing.JFrame {
         controller = new VendaController();
         controller2 = new ItensVendaController();
         controller3 = new ClienteController();
+        controller4 = new ProdutoController();
         this.setLocationRelativeTo(null);
         carregarProdutos();
         carregarVendedores();
@@ -70,6 +71,7 @@ public class VendaView extends javax.swing.JFrame {
     private List<Usuario> listaVendedor = new ArrayList<>();
     private List<Produto> listaProdutos = new ArrayList<>();
     private int idClienteD;
+    private ProdutoController controller4;
 
     private void carregarProdutos() {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbenterpriseflow", "root", "")) {
@@ -621,10 +623,10 @@ public class VendaView extends javax.swing.JFrame {
             }
         }
         if (verificar) {
-            if (quantEstoque >= quantProd) {
+            if (quantEstoque >= quantProd && quantProd > 0) {
                 modelTbl.addRow(new Object[]{produto, cat, valorUnit, quantProd});
             } else {
-                JOptionPane.showMessageDialog(null, "Quantidade no estoque é de apenas " + quantEstoque + " unidades");
+                JOptionPane.showMessageDialog(null, "Quantidade no estoque é de " + quantEstoque + " unidades. A quantidade de produtos deve ser maior que 0");
             }
         } else {
             JOptionPane.showMessageDialog(null, "Esse produto já foi cadastrado na venda!");
@@ -639,6 +641,8 @@ public class VendaView extends javax.swing.JFrame {
         int idVendedor = 0;
         String nomeVendedor = "";
         int indice = cbVendedor.getSelectedIndex();
+        int quantP = 0;
+        int novaQuant = 0;
         javax.swing.table.DefaultTableModel modelTbl = (javax.swing.table.DefaultTableModel) tbVenda.getModel();
         if (indice >= 0) {
             Usuario usuario = listaVendedor.get(indice);
@@ -677,20 +681,27 @@ public class VendaView extends javax.swing.JFrame {
                 int quant = Integer.parseInt(tbVenda.getValueAt(i, 3).toString());
                 double precoU = Double.parseDouble(tbVenda.getValueAt(i, 2).toString());
                 int idProduto = 0;
-                String sql = "SELECT idProduto FROM produto WHERE nomeProduto = ?";
+                String sql = "SELECT idProduto, quantEstoque FROM produto WHERE nomeProduto = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, produto);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
                     idProduto = rs.getInt("idProduto");
+                    quantP = rs.getInt("quantEstoque");
+                    novaQuant = quantP - quant;
                 }
-                Produto p = new Produto(idProduto, produto);
+                Produto p = new Produto(idProduto, produto, novaQuant);
                 ItensVenda iv = new ItensVenda(v, p, quant, precoU);
                 controller2.salvar(iv);
+                
+               
+                controller4.atualizarQuantidade(p);
+                
             }
             ////////////////////////////////////////////////////////////////////////////////////////////
             limparCampos();
             precoTotal = 0;
+            tbVenda.removeAll();
         } catch (Exception ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage());
             ex.printStackTrace(); // mostra tudo no console

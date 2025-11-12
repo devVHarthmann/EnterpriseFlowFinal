@@ -25,6 +25,10 @@ public class ProdutoController {
         dao.atualizar(p);
     }
 
+    public void atualizarQuantidade(Produto p) throws SQLException {
+        dao.atualizarQuantidade(p);
+    }
+
     public void remover(int id) throws SQLException {
         dao.remover(id);
     }
