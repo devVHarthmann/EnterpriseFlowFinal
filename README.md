@@ -4,7 +4,7 @@
 
 ### Dev group 1
 
-O programa EnterpriseFlow, da *Caras do Codigo corp*, é um sistema de organização de vendas, estoque, entre outras funçoes basicas que são dificieis de manter conta.
+O programa EnterpriseFlow, da Caras do Codigo corp, é um sistema de organização de vendas, estoque, entre outras funçoes basicas que são dificieis de manter conta.
 Focando na função de simplificar a organização e distribuição de vendas e estoques e controle das informaçoes relevantes para pequenos comercios.
 O programa é focado na simplicidade, com uma interface feita completamente em Java e integrado com Banco de dados pessoal, para individualização do sistema.
 Utiliza uma implimentação com PowerBi para trazer uma simulação e visão mais precisa dos dados analizados.
@@ -30,20 +30,20 @@ Dev Team: Vitor Harthmann, Bruno Soares, Otavio Martins, Gabriel Brandão
 
 ## Estrutura do projeto
 
-```text
+text
 src/br/ulbra/
  ├─ dao/         → Classes DAO (AbstractDAO, UsuarioDAO, ClienteDAO)
  ├─ controller/  → Lógica de controle (UsuarioController, ClienteController)
  ├─ model/       → Modelos (Usuario.java, Cliente.java)
  ├─ view/        → Interfaces gráficas (LoginView, MenuPrincipalView, UsuarioView, ClienteView)
  └─ img/         → Ícones
-```
+
 
 ---
 
 ## Banco de Dados
 
-``` sql
+ sql
 --
 -- Banco de dados: `dbenterpriseflow`
 --
@@ -212,47 +212,47 @@ ALTER TABLE `venda`
   ADD CONSTRAINT `fkVendaVendedor` FOREIGN KEY (`idVendedor`) REFERENCES `vendedor` (`idVendedor`);
 COMMIT;
 
-```
+
 ## 👤 Criando o primeiro usuário (ADM)
 
 ### Opção 1 — Gerar hash manual
 Use esta classe para gerar o hash:
-```java
+java
 import org.mindrot.jbcrypt.BCrypt;
 public class HashGenerator {
     public static void main(String[] args) {
         System.out.println(BCrypt.hashpw("admin123", BCrypt.gensalt()));
     }
 }
-```
+
 Depois insira no banco:
-```sql
+sql
 INSERT INTO usuario (login, senha, nome, ativo)
 VALUES ('adm', '$2a$10$HASHGERADO...', 'Administrador', 1);
-```
+
 
 ### Opção 2 — Criar automaticamente no código
-No `CadastroUsuarioView.form`, antes de abrir a tela de login, verifique se há usuários e crie o **adm/admin123** caso não exista.
+No CadastroUsuarioView.form, antes de abrir a tela de login, verifique se há usuários e crie o *adm/admin123* caso não exista.
 
 ---
 
 ## ▶️ Execução
-1. Rode o projeto (classe `CadastroUsuario.view` é a principal).
+1. Rode o projeto (classe CadastroUsuario.view é a principal).
 2. Faça login:
-   - Usuário: `adm`
-   - Senha: `admin123`
-3. Após autenticação, o sistema abre o **Main.view**.
+   - Usuário: adm
+   - Senha: admin123
+3. Após autenticação, o sistema abre o *Main.view*.
 
 ---
 
 ## 🔒 Segurança
-- Senhas são armazenadas com **jBCrypt**, nunca em texto puro.
+- Senhas são armazenadas com *jBCrypt*, nunca em texto puro.
 - Recomenda-se usar um usuário MySQL dedicado em produção:
-```sql
+sql
 CREATE USER 'appuser'@'localhost' IDENTIFIED BY 'senhaSegura';
 GRANT ALL PRIVILEGES ON cruddb1.* TO 'appuser'@'localhost';
-```
+
 
 ---
 ## 👨‍🏫 Sobre
-Este projeto foi desenvolvido para fins **educacionais**, como exemplo de CRUD com **Java + MySQL + Swing**, servindo de base para práticas de programação fullstack. Além disso, utiliza da collaboração entre alunos, ensinando-os as dificuldes do mercado de trabalho e como o ambiente de trabalho funciona.
+Este projeto foi desenvolvido para fins *educacionais, como exemplo de CRUD com **Java + MySQL + Swing*, servindo de base para práticas de programação fullstack. Além disso, utiliza da collaboração entre alunos, ensinando-os as dificuldes do mercado de trabalho e como o ambiente de trabalho funciona.
